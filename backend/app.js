@@ -1,9 +1,15 @@
 import Fastify from 'fastify'
-import routes from './router.mjs'
+import routes from './router.js'
+import dotenv from 'dotenv'
+import knex from './db.js'
+
+dotenv.config()
 
 const fastify = Fastify({
   logger: true
 })
+
+fastify.decorate('db', knex)
 
 fastify.register(routes)
 
