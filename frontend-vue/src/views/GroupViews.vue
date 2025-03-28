@@ -23,12 +23,12 @@
     <div class="flex mb-4">
       <textarea
         v-model="novaTarefa"
-        @keyup.enter="adicionarTarefa"
+        @keyup.enter="addToDo"
         placeholder="Nova tarefa..."
         class="flex-1 p-2 border rounded-l focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-hidden min-h-[40px]"
       ></textarea>
       <button
-        @click="adicionarTarefa"
+        @click="addToDo"
         class="bg-blue-500 text-white px-4 py-2 rounded-r hover:bg-blue-600 cursor-pointer"
       >
         Add
@@ -44,12 +44,12 @@
         <span
           :class="{ 'line-through text-gray-400': tarefa.concluida }"
           class="cursor-pointer break-words w-full"
-          @click="toggleTarefa(index)"
+          @click="toggleToDo(index)"
         >
           {{ tarefa.texto }}
         </span>
         <button
-          @click="removerTarefa(index)"
+          @click="removeToDo(index)"
           class="text-red-500 hover:text-red-700 cursor-pointer"
         >
           ❌
@@ -62,26 +62,24 @@
 <script setup>
 import { ref } from 'vue';
 
-defineEmits(['removeGroup']);
-
 const novaTarefa = ref('');
 const tarefas = ref([]);
 
 const editMode = ref(false);
 const groupName = ref("Group Name");
 
-const adicionarTarefa = () => {
+const addToDo = () => {
   if (novaTarefa.value.trim() !== '') {
     tarefas.value.push({ texto: novaTarefa.value, concluida: false });
     novaTarefa.value = '';
   }
 };
 
-const toggleTarefa = (index) => {
+const toggleToDo = (index) => {
   tarefas.value[index].concluida = !tarefas.value[index].concluida;
 };
 
-const removerTarefa = (index) => {
+const removeToDo = (index) => {
   tarefas.value.splice(index, 1);
 };
 </script>
