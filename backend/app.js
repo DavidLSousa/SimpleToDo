@@ -1,5 +1,5 @@
 import Fastify from 'fastify'
-import routes from './router.js'
+import { routes } from './router.js'
 import dotenv from 'dotenv'
 import knex from './db.js'
 
