@@ -12,23 +12,24 @@ const userDbService = new UserDbService();
 const authService = new AuthService(userDbService);
 const authController = new AuthController(authService);
 
+import AuthMiddleware from "./src/middlewares/auth_middleware.js";
+const authMiddleware = new AuthMiddleware(authService);
+
+const preHandler = {
+	preHandler: (request, reply, done) => { authMiddleware.verifyToken(request, reply, done);	}
+}
+
 async function routes(fastify) {
   // Authentication routes
-  fastify.post("/register", (request, reply) =>
-    authController.register(request, reply)
-  );
-  fastify.post("/login", (request, reply) =>
-    authController.login(request, reply)
-  );
-  fastify.post("/logout", (request, reply) =>
-    authController.logout(request, reply)
-  );
+  fastify.post("/register", (request, reply) => authController.register(request, reply) );
+  fastify.post("/login", (request, reply) => authController.login(request, reply) );
+  fastify.post("/logout", (request, reply) => authController.logout(request, reply) );
 
   // Database routes
-  fastify.get("/todos", getToDos);
-  fastify.post("/todos", addToDo);
-  fastify.put("/todos/:id", updateStatus);
-  fastify.delete("/todos/:id", deleteToDo);
+  fastify.get("/todos", preHandler, getToDos);
+  fastify.post("/todos", preHandler, addToDo);
+  fastify.put("/todos/:id", preHandler, updateStatus);
+  fastify.delete("/todos/:id", preHandler, deleteToDo);
 }
 
 export { routes };

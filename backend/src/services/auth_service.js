@@ -42,4 +42,15 @@ export default class AuthService {
     }
   }
 
+  async verifyToken(token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded) throw new Error("Invalid token");
+
+      return await this.userDbService.getUserByEmail(decoded.email);
+    } catch (error) {
+      throw new Error("Invalid token");
+    }
+  }
+
 }
