@@ -9,8 +9,8 @@ export default class UserDbService {
     await db('users').insert(newUser);
   }
 
-  async getUserById(userId) {
-    await db('users').where('id', userId)
+  async getUserByEmail(email) {
+    return await db('users').where('email', email)
   }
 
   async checkUserExists(email) {

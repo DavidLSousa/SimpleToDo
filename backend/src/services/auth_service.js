@@ -26,9 +26,21 @@ export default class AuthService {
   }
 
 
-  login(user) {
-    const token = jwt.sign({ id: user.id  }, process.env.JWT_SECRET, { expiresIn: '300000' });
-    return token; 
+  async login(email, password) {
+    try {
+      const [ user ] = await this.userDbService.getUserByEmail(email);
+      if (!user) throw new Error("User not found");
+
+      const isValidPassword = bcrypt.compareSync(password, user.password);
+      if (!isValidPassword) throw new Error("Invalid password");
+
+      const token = jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '300000' });
+
+      return { user, token }
+
+    } catch (error) {
+      throw new Error("AuthService.login failed");
+    }
   }
 
 }

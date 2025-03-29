@@ -17,12 +17,16 @@ export default class AuthController {
     }
   };
   
-  login(rquest, reply) {
+  async login(request, reply) {
     try {
-      return reply.code(200).send({ message: "Login successful" });
+
+      const { email, password } = request.body;
+      const { user, token } = await this.authService.login(email, password);
+
+      return reply.code(200).header("Authorization", `Bearer ${token}`).send({ user });
   
     } catch (error) {
-      return reply.code(500).send({ message: "Login unauthorized" });
+      return reply.code(500).send({ message: error.message });
       
     }
   };
