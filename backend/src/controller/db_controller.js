@@ -1,4 +1,4 @@
-import { getAllToDos, delToDo, updateToDo, insertToDO } from '../services/db_services.js';
+import { getAllToDos, delToDo, updateToDo, insertToDO } from '../services/todo_db_services.js';
 
 const getToDos = async (request, reply) => {
   try {
