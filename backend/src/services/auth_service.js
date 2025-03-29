@@ -21,10 +21,9 @@ export default class AuthService {
       await this.userDbService.saveUser(newUser);
 
     } catch (error) {
-      throw new Error("AuthService.register failed"); 
+      throw new Error(error.message + "AuthService.register failed"); 
     }
   }
-
 
   async login(email, password) {
     try {
@@ -34,12 +33,12 @@ export default class AuthService {
       const isValidPassword = bcrypt.compareSync(password, user.password);
       if (!isValidPassword) throw new Error("Invalid password");
 
-      const token = jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '300000' });
+      const token = jwt.sign({ email: email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
       return { user, token }
 
     } catch (error) {
-      throw new Error("AuthService.login failed");
+      throw new Error(error.message + " - AuthService.login failed");
     }
   }
 
