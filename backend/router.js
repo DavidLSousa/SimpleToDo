@@ -1,9 +1,6 @@
-import {
-  getToDos,
-  deleteToDo,
-  updateStatus,
-  addToDo,
-} from "./src/controller/db_controller.js";
+import ToDoController from "./src/controller/todo_controller.js";
+import TodoServices from "./src/services/todo_services.js";
+const toDoController = new ToDoController(new TodoServices());
 
 import AuthController from "./src/controller/auth_controller.js";
 import AuthService from "./src/services/auth_service.js";
@@ -26,10 +23,10 @@ async function routes(fastify) {
   fastify.post("/logout", (request, reply) => authController.logout(request, reply) );
 
   // Database routes
-  fastify.get("/todos", preHandler, getToDos);
-  fastify.post("/todos", preHandler, addToDo);
-  fastify.put("/todos/:id", preHandler, updateStatus);
-  fastify.delete("/todos/:id", preHandler, deleteToDo);
+  fastify.get("/todos", preHandler, (request, reply) => toDoController.getToDos(request, reply) );
+  fastify.post("/todos", preHandler, (request, reply) => toDoController.addToDo(request, reply) );
+  fastify.put("/todos/:id", preHandler, (request, reply) => toDoController.updateStatus(request, reply) );
+  fastify.delete("/todos/:id", preHandler, (request, reply) => toDoController.deleteToDo(request, reply) );
 }
 
 export { routes };
