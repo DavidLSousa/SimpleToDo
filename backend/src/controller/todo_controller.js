@@ -7,7 +7,8 @@ export default class ToDoController {
   getToDos = async (request, reply) => {
     try {
       // Vai fazer essa busca com base nas tarefas daquele usuário;
-      const result = await this.TodoServices.getAllToDos();
+      // const result = await this.TodoServices.getAllToDos();
+      const result = await this.TodoServices.getUserToDos(request.user.id);
   
       return reply.send({ todos: result });
     } catch (error) {
@@ -19,7 +20,7 @@ export default class ToDoController {
   deleteToDo = async (request, reply) => {
     try {
       const { id } = request.params;
-      await this.TodoServices.delToDo(id);
+      await this.TodoServices.delToDo(id, request.user.id);
   
       return reply.send({ message: "ToDo deleted" });
   
@@ -34,7 +35,7 @@ export default class ToDoController {
       const { id } = request.params;
       const { completed } = request.query;
   
-      await this.TodoServices.updateToDo(id, completed);
+      await this.TodoServices.updateToDo(id, completed, request.user.id);
   
       return reply.send({ message: "ToDo updated" });
     } catch (error) {
@@ -47,7 +48,7 @@ export default class ToDoController {
     try {
       const { title } = request.body;
   
-      await this.TodoServices.insertToDO(title);
+      await this.TodoServices.insertToDO(title, request.user.id);
   
       return reply.send({ message: "ToDo added" });
     } catch (error) {
