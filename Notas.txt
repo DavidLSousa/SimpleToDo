@@ -1,0 +1,6 @@
+Bugs:
+[ ]
+
+A fazer:
+[ ] Ajustar retorno da RegisterPage - Feedback no usuário
+[ ] Melhorar thows da API;
