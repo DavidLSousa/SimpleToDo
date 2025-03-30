@@ -6,6 +6,7 @@ export default class ToDoController {
 
   getToDos = async (request, reply) => {
     try {
+      // Vai fazer essa busca com base nas tarefas daquele usuário;
       const result = await this.TodoServices.getAllToDos();
   
       return reply.send({ todos: result });
