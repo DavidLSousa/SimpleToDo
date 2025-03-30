@@ -22,6 +22,8 @@ async function routes(fastify) {
   fastify.post("/login", (request, reply) => authController.login(request, reply) );
   fastify.post("/logout", (request, reply) => authController.logout(request, reply) );
 
+  fastify.post("/check-token", preHandler, (_, reply) => reply.code(200).send() );
+
   // Database routes
   fastify.get("/todos", preHandler, (request, reply) => toDoController.getToDos(request, reply) );
   fastify.post("/todos", preHandler, (request, reply) => toDoController.addToDo(request, reply) );
