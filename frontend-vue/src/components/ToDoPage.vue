@@ -37,21 +37,28 @@ const user = reactive({});
 const addToDo = () => {
   if (newToDo.value.trim() !== '') {
     toDos.value.push({
-      text: newToDo.value,
+      title: newToDo.value,
       completed: false
     });
+
+    fecthAddToDo();
+
     newToDo.value = '';
   }
 };
 const toggleToDo = (index) => {
+  fecthToggleToDo(toDos.value[index].id, toDos.value[index].completed);
+
   toDos.value[index].completed = !toDos.value[index].completed;
 };
 const removeToDo = (index) => {
+  fecthRemoveToDo(toDos.value[index].id);
+
   toDos.value.splice(index, 1);
 };
 
 // API
-const getUserToDos = async (token) => {
+const fecthGetUserToDos = async (token) => {
     try {
       const response = await fetch('http://localhost:3000/todos', {
         method: "GET",
@@ -73,6 +80,80 @@ const getUserToDos = async (token) => {
       console.log(error.message);
     }
 };
+const fecthAddToDo = async () => {
+  try {
+    const token = localStorage.getItem('token')
+
+    const response = await fetch('http://localhost:3000/todos', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ title: newToDo.value }),
+    })
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
+    }
+
+    const { allToDos } = await response.json()
+
+    toDos.value = allToDos
+
+    console.log('Tarefa enviada com sucesso!')
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+const fecthToggleToDo = async (index, currentStatus) => {
+  try {
+    const token = localStorage.getItem('token')
+
+    const response = await fetch(`http://localhost:3000/todos/${index}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({ currentStatus: currentStatus }),
+    })
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
+    }
+
+    console.log('Tarefa atualizada com sucesso!')
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+const fecthRemoveToDo = async (toDoId) => {
+  try {
+    const token = localStorage.getItem('token')
+
+    const response = await fetch(`http://localhost:3000/todos/${toDoId}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    })
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
+    }
+
+    console.log('Tarefa deletada com sucesso!')
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 onMounted(() => {
   const token = localStorage.getItem('token')
@@ -83,7 +164,7 @@ onMounted(() => {
   loged.value = true
   Object.assign(user, userStore);
 
-  getUserToDos(token);
+  fecthGetUserToDos(token);
 
 });
 </script>

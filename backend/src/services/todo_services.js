@@ -11,21 +11,21 @@ export default class ToDoServices {
       .select('*')
   }
   
-  delToDo = async (currentId, userId) => {
+  delToDo = async (toDoId, userId) => {
     return await this.db('todos')
-      .where({ id: currentId, user_id: userId })
+      .where({ id: toDoId, user_id: userId })
       .del();
   }
   
-  updateToDo = async (currentId, completed, userId) => {
-    const isCompleted = completed === 'true';
+  updateToDo = async (toDoId, currentStatus, userId) => {
     return await this.db('todos')
-      .where({ id: currentId, user_id: userId })
-      .update({ completed: isCompleted });
+      .where({ id: toDoId, user_id: userId })
+      .update({ completed: !currentStatus });
   }
   
   insertToDO = async (title, userId) => {
-    return await this.db('todos')
-      .insert({ title, user_id: userId,  completed: false });
+    await this.db('todos').insert({ title, user_id: userId,  completed: false });
+
+    return await this.db('todos').where('user_id', userId).select('*');
   }
 }

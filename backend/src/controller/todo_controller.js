@@ -6,8 +6,6 @@ export default class ToDoController {
 
   getToDos = async (request, reply) => {
     try {
-      // Vai fazer essa busca com base nas tarefas daquele usuário;
-      // const result = await this.TodoServices.getAllToDos();
       const result = await this.TodoServices.getUserToDos(request.user.id);
   
       return reply.send({ todos: result });
@@ -33,9 +31,11 @@ export default class ToDoController {
   updateStatus = async (request, reply) => {7
     try {
       const { id } = request.params;
-      const { completed } = request.query;
+      const { currentStatus } = request.body;
+
+      console.log(currentStatus)
   
-      await this.TodoServices.updateToDo(id, completed, request.user.id);
+      await this.TodoServices.updateToDo(id, currentStatus, request.user.id);
   
       return reply.send({ message: "ToDo updated" });
     } catch (error) {
@@ -48,9 +48,9 @@ export default class ToDoController {
     try {
       const { title } = request.body;
   
-      await this.TodoServices.insertToDO(title, request.user.id);
+      const allToDos = await this.TodoServices.insertToDO(title, request.user.id);
   
-      return reply.send({ message: "ToDo added" });
+      return reply.send({ allToDos: allToDos });
     } catch (error) {
       console.log(error.message)
       return reply.status(500).send({ error: "Internal Server Error" });
