@@ -1,5 +1,7 @@
 import Fastify from 'fastify'
 import fastifyFormbody from '@fastify/formbody'
+import cors from '@fastify/cors'
+
 import { routes } from './router.js'
 import dotenv from 'dotenv'
 import knex from './db.js'
@@ -9,6 +11,12 @@ dotenv.config()
 const fastify = Fastify({
   logger: true
 })
+
+await fastify.register(cors, {
+  origin: 'http://127.0.0.1:3002', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
 fastify.register(fastifyFormbody);
 
