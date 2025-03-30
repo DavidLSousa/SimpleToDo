@@ -9,7 +9,9 @@ export default class AuthController {
     try {
       const { name, email, password } = request.body;
       
-      await this.authService.register(name, password, email);
+      const user = await this.authService.register(name, password, email);
+
+      if (user) return reply.code(400).send({ message: "User already exists" });
 
       return reply.code(200).send({ message: "Register successful" });
     } catch (error) {

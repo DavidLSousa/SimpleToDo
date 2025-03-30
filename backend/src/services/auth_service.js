@@ -14,7 +14,7 @@ export default class AuthService {
     try {
       const userExists = await this.userDbService.checkUserExists(email);
 
-      if (userExists) throw new Error("User already exists");
+      if (userExists) return await this.userDbService.getUserByEmail(email);
 
       const hashPassword = await bcrypt.hash(password, 10);
       const newUser = new User( { name, password: hashPassword, email } );
