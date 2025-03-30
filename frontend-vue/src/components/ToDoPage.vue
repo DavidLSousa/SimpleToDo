@@ -33,6 +33,7 @@ const toDos = ref([]);
 const loged = ref(false);
 const user = reactive({});
 
+// Front
 const addToDo = () => {
   if (newToDo.value.trim() !== '') {
     toDos.value.push({
@@ -42,25 +43,15 @@ const addToDo = () => {
     newToDo.value = '';
   }
 };
-
 const toggleToDo = (index) => {
   toDos.value[index].completed = !toDos.value[index].completed;
 };
-
 const removeToDo = (index) => {
   toDos.value.splice(index, 1);
 };
 
-onMounted(() => {
-  const token = localStorage.getItem('token')
-  const userStore = JSON.parse(localStorage.getItem('user'))
-
-  if(!token) return
-
-  loged.value = true
-  Object.assign(user, userStore);
-
-  const getUserToDos = async () => {
+// API
+const getUserToDos = async (token) => {
     try {
       const response = await fetch('http://localhost:3000/todos', {
         method: "GET",
@@ -81,8 +72,18 @@ onMounted(() => {
     } catch (error) {
       console.log(error.message);
     }
-  };
-  getUserToDos();
+};
+
+onMounted(() => {
+  const token = localStorage.getItem('token')
+  const userStore = JSON.parse(localStorage.getItem('user'))
+
+  if(!token) return
+
+  loged.value = true
+  Object.assign(user, userStore);
+
+  getUserToDos(token);
 
 });
 </script>
