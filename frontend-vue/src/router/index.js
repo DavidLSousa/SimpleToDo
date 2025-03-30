@@ -3,6 +3,7 @@ import LoginPage from '@/components/LoginPage.vue'
 import RegisterPage from '@/components/RegisterPage.vue'
 import MainPage from '@/components/MainPage.vue'
 import ToDoPage from '@/components/ToDoPage.vue'
+import PerfilPage from '@/components/PerfilPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,10 @@ const router = createRouter({
     {
       path:'/tarefas',
       component: ToDoPage
+    },
+    {
+      path:'/perfil',
+      component: PerfilPage
     }
   ],
 })

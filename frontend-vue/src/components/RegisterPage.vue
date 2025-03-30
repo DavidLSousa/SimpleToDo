@@ -28,6 +28,16 @@
 
 <script setup>
 import { ref } from 'vue';
+import router from '@/router';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const token = localStorage.getItem('token')
+
+  if(!token) return
+
+  router.push('/tarefas')
+})
 
 const name = ref('');
 const email = ref('');
@@ -57,4 +67,6 @@ const handleRegister = async () => {
   }
 
 };
+
+
 </script>

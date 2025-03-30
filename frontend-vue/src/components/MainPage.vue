@@ -33,3 +33,18 @@
     </div>
   </div>
 </template>
+
+<script setup>
+
+import router from '@/router';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const token = localStorage.getItem('token')
+
+  if(!token) return
+
+  router.push('/tarefas')
+})
+
+</script>

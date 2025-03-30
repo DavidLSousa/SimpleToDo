@@ -23,12 +23,50 @@
 
 <script setup>
 import { ref } from 'vue';
+import router from '@/router';
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  const token = localStorage.getItem('token')
+
+  if(!token) return
+
+  router.push('/tarefas')
+})
 
 const email = ref('');
 const password = ref('');
 
-const handleLogin = () => {
-  console.log("Email:", email.value);
-  console.log("Senha:", password.value);
+const handleLogin = async () => {
+  const user = { email: email.value, password: password.value }
+
+  try {
+    const response = await fetch('http://localhost:3000/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    })
+
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
+    }
+
+    const token = response.headers.get("Authorization").split(" ")[1]
+    const { userDTO } = await response.json();
+
+    localStorage.setItem("token", token);
+    localStorage.setItem('user', JSON.stringify(userDTO));
+
+    router.push("/tarefas")
+    window.location.reload();
+
+    console.log('Resgistro feito com sucesso')
+
+  } catch (error) {
+    console.log(error.message)
+  }
 };
 </script>
