@@ -8,3 +8,11 @@ export class User {
     this.email = email;
   }
 }
+
+export class UserDTO {
+  constructor({ id, name, email }) {
+    this.id = id; 
+    this.name = name;
+    this.email = email;
+  }
+}

@@ -1,3 +1,4 @@
+import { UserDTO } from "../Model/User.js";
 
 export default class AuthController {
 
@@ -25,7 +26,9 @@ export default class AuthController {
       const { email, password } = request.body;
       const { user, token } = await this.authService.login(email, password);
 
-      return reply.code(200).header("Authorization", `Bearer ${token}`).send({ user });
+      const userDTO = new UserDTO({ id: user.id, name: user.name, email: user.email });
+
+      return reply.code(200).header("Authorization", `Bearer ${token}`).send({ userDTO });
   
     } catch (error) {
       return reply.code(500).send({ message: error.message });
