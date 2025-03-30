@@ -30,7 +30,7 @@ const checkToken = async () => {
   const token = localStorage.getItem('token');
 
   if (!token) {
-    loged.value = false; // Usuário não está logado
+    loged.value = false;
     return;
   }
 
@@ -50,11 +50,10 @@ const checkToken = async () => {
     loged.value = true;
   } catch (error) {
     loged.value = false;
-    console.log("Erro na verificação do token:", error.message);
+    console.log(error.message);
   }
 };
 
-// Escuta o evento global de logout
 window.addEventListener("user-logged-out", () => {
   loged.value = false;
 });
