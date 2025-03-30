@@ -16,6 +16,7 @@ await fastify.register(cors, {
   origin: 'http://127.0.0.1:3002', 
   methods: ['GET', 'POST', 'PUT', 'DELETE'], 
   allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ["Authorization"],
 });
 
 fastify.register(fastifyFormbody);
