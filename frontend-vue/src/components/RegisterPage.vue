@@ -18,8 +18,8 @@
           <input v-model="password" type="password" id="password"
             class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300" required />
         </div>
-        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">
-          Registrar
+        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 cursor-pointer">
+          {{ btnSutmitRegister }}
         </button>
       </form>
     </div>
@@ -30,6 +30,8 @@
 import { ref } from 'vue';
 import router from '@/router';
 import { onMounted } from 'vue';
+
+const btnSutmitRegister = ref('Registrar')
 
 onMounted(() => {
   const token = localStorage.getItem('token')
@@ -59,6 +61,8 @@ const handleRegister = async () => {
       const data = await response.json();
       throw new Error(data.message);
     }
+
+    btnSutmitRegister.value = 'Registrado com sucesso'
 
     console.log('Resgistro feito com sucesso')
 
