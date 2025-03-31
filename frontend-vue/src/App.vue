@@ -9,7 +9,7 @@
 
           <nav class="font-bold flex flex-row gap-4">
             <RouterLink v-if="!loged" to="/login" class="py-1 px-2">Login</RouterLink>
-            <RouterLink v-else to="/perfil" class="py-1 px-2">Perfil</RouterLink>
+            <RouterLink v-else to="/perfil" @click="checkTokenInValid" class="py-1 px-2">Perfil</RouterLink>
           </nav>
         </div>
       </div>
@@ -23,8 +23,22 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router';
 import { onMounted, ref } from 'vue';
+import router from './router';
 
 const loged = ref(false);
+
+const handleTokenInvalid = async (errMessage) => {
+  if (errMessage === 'Unauthorized') {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    loged.value = false
+
+    router.push("/login")
+  }
+}
+const checkTokenInValid = (error) => {
+  handleTokenInvalid(error.message);
+}
 
 const checkToken = async () => {
   const token = localStorage.getItem('token');
@@ -44,6 +58,8 @@ const checkToken = async () => {
 
     if (!response.ok) {
       loged.value = false;
+
+      checkTokenInValid('Unauthorized');
       return;
     }
 

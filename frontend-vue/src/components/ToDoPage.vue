@@ -1,7 +1,7 @@
 <template>
   <div class="flex p-4 mt-16 justify-center">
     <div class="bg-gray-100 shadow-lg rounded-lg p-4 w-full sm:max-w-4xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl">
-      <h2 v-if="!loged"  class="text-2xl font-bold text-gray-700 mb-4"> Tarefas </h2>
+      <h2 v-if="!loged" class="text-2xl font-bold text-gray-700 mb-4"> Tarefas </h2>
       <h2 v-else class="text-2xl font-bold text-gray-700 mb-4"> Tarefas de {{ user.name }} </h2>
 
       <div class="flex mb-4">
@@ -27,6 +27,7 @@
 
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
+import router from '@/router';
 
 const newToDo = ref('');
 const toDos = ref([]);
@@ -59,26 +60,28 @@ const removeToDo = (index) => {
 
 // API
 const fecthGetUserToDos = async (token) => {
-    try {
-      const response = await fetch('http://localhost:3000/todos', {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-      });
+  try {
+    const response = await fetch('http://localhost:3000/todos', {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    });
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message);
-      }
-
-      const { todos } = await response.json();
-      toDos.value = todos
-
-    } catch (error) {
-      console.log(error.message);
+    if (!response.ok) {
+      const data = await response.json();
+      throw new Error(data.message);
     }
+
+    const { todos } = await response.json();
+    toDos.value = todos
+
+  } catch (error) {
+    handleTokenInvalid(error.message);
+
+    console.log(error.message);
+  }
 };
 const fecthAddToDo = async () => {
   try {
@@ -105,6 +108,8 @@ const fecthAddToDo = async () => {
     console.log('Tarefa enviada com sucesso!')
 
   } catch (error) {
+    handleTokenInvalid(error.message);
+
     console.log(error.message)
   }
 }
@@ -129,6 +134,8 @@ const fecthToggleToDo = async (index, currentStatus) => {
     console.log('Tarefa atualizada com sucesso!')
 
   } catch (error) {
+    handleTokenInvalid(error.message);
+
     console.log(error.message)
   }
 }
@@ -151,7 +158,19 @@ const fecthRemoveToDo = async (toDoId) => {
     console.log('Tarefa deletada com sucesso!')
 
   } catch (error) {
+    handleTokenInvalid(error.message);
+
     console.log(error.message)
+  }
+}
+
+const handleTokenInvalid = async (errMessage)=> {
+  if (errMessage === 'Unauthorized') {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    loged.value = false
+
+    router.push("/login")
   }
 }
 
@@ -159,7 +178,7 @@ onMounted(() => {
   const token = localStorage.getItem('token')
   const userStore = JSON.parse(localStorage.getItem('user'))
 
-  if(!token) return
+  if (!token) return
 
   loged.value = true
   Object.assign(user, userStore);

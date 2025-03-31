@@ -67,6 +67,7 @@ const handleRegister = async () => {
     console.log('Resgistro feito com sucesso')
 
   } catch (error) {
+
     console.log(error.message)
   }
 
