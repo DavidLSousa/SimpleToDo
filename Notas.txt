@@ -4,3 +4,5 @@ Bugs:
 A fazer:
 [x] Ajustar retorno da RegisterPage - Feedback no usuário
 [ ] Melhorar thows da API;
+
+[ ] Contenerizar tudo 
